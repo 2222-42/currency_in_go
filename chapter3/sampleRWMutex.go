@@ -43,7 +43,7 @@ func main() {
 
 	var m sync.RWMutex
 	fmt.Fprintf(tw, "Readers\tRWMutex\tMutex\n")
-	for i := 0; i < 20; i++ {
+	for i := 0; i < 22; i++ {
 		count := int(math.Pow(2, float64(i)))
 		fmt.Fprintf(
 			tw,
