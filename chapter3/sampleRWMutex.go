@@ -15,6 +15,7 @@ func main() {
 		for i := 5; i > 0; i-- {
 			l.Lock()
 			l.Unlock()
+			// defer はloop中なので使えない。
 			time.Sleep(1)
 		}
 	}
