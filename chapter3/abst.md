@@ -154,6 +154,10 @@ Readers  RWMutex     Mutex
 
 ### 3.2.3 Cond
 
+`for`で囲む理由は、シグナルが来るまでWaitによって待つが、しかしそのシグナルが求めているシグナルかは不明だから。
+
+Unlockなのに`defer`していない箇所がある理由は？Signalを送る前にUnlockしたいからか？
+
 ### 3.2.4 Once
 
 ### 3.2.5 Pool
