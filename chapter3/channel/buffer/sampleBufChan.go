@@ -25,7 +25,7 @@ func main() {
 	}
 
 	chanOwner := func() <-chan int {
-		resultCh := make(chan int, 5)
+		resultCh := make(chan int, 5) // チャネルをレキシカルスコープ内で初期化。書き込みできるスコープの制限、権限の拘束
 		go func() {
 			defer close(resultCh)
 			for i := 0; i <= 5; i++ {
@@ -35,9 +35,16 @@ func main() {
 		return resultCh
 	}
 
-	resultCh := chanOwner()
-	for result := range resultCh {
-		fmt.Printf("Received: %d\n", result)
+	consumer := func(resultCh <-chan int) { // チャネルへの読み込み権限を受け取り、読み込み以外の何もしないように、拘束する
+		for result := range resultCh {
+			fmt.Printf("Received: %d\n", result)
+		}
+		fmt.Println("Done receiving!")
 	}
-	fmt.Println("Done receiving!")
+	resultCh := chanOwner() //　読み込み専用のコピーを受け取る
+	consumer(resultCh)
+	//for result := range resultCh {
+	//	fmt.Printf("Received: %d\n", result)
+	//}
+	//fmt.Println("Done receiving!")
 }
