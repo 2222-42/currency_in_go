@@ -263,7 +263,7 @@ Search took: 2.9997ms
 orDone := func(done, c <-chan interface{}) <-chan interface{}{
 	valCh := make(chan interface{})
 	go func() {
-		defere close(valCh)
+		defer close(valCh)
 		for {
 			select{
 			case <-done:
@@ -279,7 +279,8 @@ orDone := func(done, c <-chan interface{}) <-chan interface{}{
 				
 			}
 		}
-	}
+	}()
+	return valCh
 }
 
 for val := range orDone(done, myChan) {
@@ -288,6 +289,8 @@ for val := range orDone(done, myChan) {
 ```
 
 ## 4.9 teeチャネル
+
+チャネルからのストリームを二つに分けて、同じ値を2つの異なる場所で使わせたい場合
 
 ## 4.10 bridgeチャネル
 
