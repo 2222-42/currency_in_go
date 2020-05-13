@@ -253,6 +253,40 @@ Search took: 2.9997ms
 
 ## 4.8 or-doneチャネル
 
+システムの完全に異なる部分から受け取ったチャネルを扱う場合、
+パイプラインと違い、doneチャネル経由でキャンセルされた場合に受け取ったチャネルがどのようにふるまうか判断出来ない。
+
+ゴルーチンがキャンセルされたという事実が、読み込み先のチャネルがキャンセルされたという意味になるかもしれない。
+だから、loop文を回しそうになるが、select文を連続して書きましょう。
+
+```
+orDone := func(done, c <-chan interface{}) <-chan interface{}{
+	valCh := make(chan interface{})
+	go func() {
+		defere close(valCh)
+		for {
+			select{
+			case <-done:
+				return
+			case v, ok := <-c:
+				if !ok {
+					return
+				}
+				select{
+				case valCh <-v:
+				case <-done:
+				}
+				
+			}
+		}
+	}
+}
+
+for val := range orDone(done, myChan) {
+// do something
+}
+```
+
 ## 4.9 teeチャネル
 
 ## 4.10 bridgeチャネル
