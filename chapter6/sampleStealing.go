@@ -4,7 +4,7 @@ import "fmt"
 
 func fib(n int) <-chan int {
 	result := make(chan int)
-	go func() {
+	go func() { // Goではゴルーチンはタスク
 		defer close(result)
 		if n <= 2 {
 			result <- 1
@@ -12,7 +12,7 @@ func fib(n int) <-chan int {
 		}
 		result <- <-fib(n-1) + <-fib(n-2)
 	}()
-	return result
+	return result // ゴルーチンのあとのものは全て継続と呼ばれる
 }
 
 func main() {
