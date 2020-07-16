@@ -162,7 +162,10 @@ func doWrokFn(done <-chan interface{}, intList ...int) (startGoroutineFn, <-chan
 
 			for {
 			valueloop:
-				for _, intVal := range intList {
+				//for _, intVal := range intList {
+				for {
+					intVal := intList[0]
+					intList = intList[1:]
 					if intVal < 0 {
 						log.Printf("negative value: %v\n", intVal) // 不健全な中庭をシミュレート
 						return                                     // ここでreturnするからheartbeat に送られず、stewardで再起動される
